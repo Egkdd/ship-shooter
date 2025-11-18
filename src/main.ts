@@ -63,7 +63,7 @@ import {
     const bands = [
       { min: 30, max: 150 }, // higher
       { min: 150, max: 300 }, // mid
-      { min: 300, max: 500 }, // deeper (near rocket)
+      { min: 300, max: 400 }, // deeper (near rocket)
     ];
 
     const maxAllowedY = Math.max(50, rocket.position.y - 140); // keep asteroids above this
@@ -136,13 +136,43 @@ import {
   asteroidCountText.position.set(10, 40);
   app.stage.addChild(asteroidCountText);
 
+  // Timer text
+  let timeLeft = 60; // 60 секунд
+  const timerText = new Text({
+    text: "01:00",
+    style: new TextStyle({
+      fontSize: 24,
+      fill: 0xffffff,
+      fontWeight: "bold",
+    }),
+  });
+  timerText.position.set(app.screen.width - 100, 10); // правий верхній кут
+  app.stage.addChild(timerText);
+
+  const timerInterval = setInterval(() => {
+    if (timeLeft > 0 && !gameOver) {
+      timeLeft--;
+      const minutes = Math.floor(timeLeft / 60)
+        .toString()
+        .padStart(2, "0");
+      const seconds = (timeLeft % 60).toString().padStart(2, "0");
+      timerText.text = `${minutes}:${seconds}`;
+    } else {
+      clearInterval(timerInterval);
+      if (!gameOver) {
+        loseText.visible = true; // якщо час закінчився і гра ще не завершена
+        gameOver = true;
+      }
+    }
+  }, 1000);
+
   // Game state
   let gameOver = false;
 
   // Win / Lose messages (centered)
   const winText = new Text(
     "YOU WIN",
-    new TextStyle({ fontSize: 64, fill: 0x00ff00, fontWeight: "bold" }),
+    new TextStyle({ fontSize: 64, fill: 0x00ff00, fontWeight: "bold" })
   );
   app.stage.addChild(winText);
   winText.visible = false;
@@ -151,7 +181,7 @@ import {
 
   const loseText = new Text(
     "YOU LOSE",
-    new TextStyle({ fontSize: 64, fill: 0xff0000, fontWeight: "bold" }),
+    new TextStyle({ fontSize: 64, fill: 0xff0000, fontWeight: "bold" })
   );
   app.stage.addChild(loseText);
   loseText.visible = false;
@@ -191,7 +221,7 @@ import {
     // Function to create star points
     function createStarPoints(
       radius: number,
-      innerRadiusMultiplier: number,
+      innerRadiusMultiplier: number
     ): number[] {
       const starPoints: number[] = [];
       const outerR = radius;
@@ -233,7 +263,7 @@ import {
     r1: number,
     x2: number,
     y2: number,
-    r2: number,
+    r2: number
   ): boolean {
     const dx = x2 - x1;
     const dy = y2 - y1;
@@ -262,13 +292,13 @@ import {
       if (keys["ArrowLeft"] || keys["a"]) {
         rocket.position.x = Math.max(
           rocketWidth / 2,
-          rocket.position.x - rocketSpeed,
+          rocket.position.x - rocketSpeed
         );
       }
       if (keys["ArrowRight"] || keys["d"]) {
         rocket.position.x = Math.min(
           app.screen.width - rocketWidth / 2,
-          rocket.position.x + rocketSpeed,
+          rocket.position.x + rocketSpeed
         );
       }
     }
@@ -286,7 +316,7 @@ import {
             bulletRadius,
             asteroids[j].position.x,
             asteroids[j].position.y,
-            Math.max(asteroids[j].width, asteroids[j].height) * 0.2,
+            Math.max(asteroids[j].width, asteroids[j].height) * 0.2
           )
         ) {
           // Create boom effect
