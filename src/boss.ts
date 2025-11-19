@@ -9,7 +9,7 @@ export interface Boss extends Sprite {
   shootTimer: number;
 }
 
-const BOSS_PATH = "/assets/boss.png"; // підлаштуй під свій шлях
+const BOSS_PATH = "/assets/boss.png";
 
 export async function createBoss(): Promise<Boss> {
   await Assets.load(BOSS_PATH);
@@ -30,7 +30,11 @@ export async function createBoss(): Promise<Boss> {
   return boss;
 }
 
-export function updateBoss(boss: Boss, deltaNormalized: number, appWidth: number) {
+export function updateBoss(
+  boss: Boss,
+  deltaNormalized: number,
+  appWidth: number
+) {
   const milliPerFrameApprox = 16 * deltaNormalized;
 
   if (boss.moving) {
